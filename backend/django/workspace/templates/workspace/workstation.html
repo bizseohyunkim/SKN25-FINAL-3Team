@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}PYPI — 워크스테이션{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/workstation.css' %}">
+<link rel="stylesheet" href="{% static 'css/agent_modal.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="lf-ws-container">
+
+    <aside class="lf-ws-sidebar">
+        <div class="lf-ws-sidebar-hd">
+            <h2 class="lf-ws-sidebar-title">발명 원본 데이터</h2>
+            <div class="lf-ws-badges">
+                <span class="lf-badge-origin">Origin Data</span>
+                <a href="{% url 'patent_report' project.id %}" target="_blank" class="lf-badge-report">리포트 보기</a>
+            </div>
+        </div>
+
+        <div class="lf-ws-sidebar-body">
+            <div class="lf-ws-card">
+                <h3 class="lf-ws-card-title">1. 해결하고자 하는 과제</h3>
+                <p class="lf-ws-card-text">{{ invention_input.problem_to_solve|linebreaksbr }}</p>
+            </div>
+            <div class="lf-ws-card">
+                <h3 class="lf-ws-card-title">2. 종래 기술의 문제점</h3>
+                <p class="lf-ws-card-text">{{ invention_input.prior_art_problem|linebreaksbr }}</p>
+            </div>
+            <div class="lf-ws-card">
+                <h3 class="lf-ws-card-title">3. 핵심 기술 구성</h3>
+                <p class="lf-ws-card-text">{{ invention_input.core_tech|linebreaksbr }}</p>
+            </div>
+            <div class="lf-ws-card">
+                <h3 class="lf-ws-card-title">4. 기대 효과</h3>
+                <p class="lf-ws-card-text">{{ invention_input.expected_effect|default:"(입력되지 않음)"|linebreaksbr }}</p>
+            </div>
+
+            <div class="lf-ws-ai-summary">
+                <h2 class="lf-ws-ai-summary-title">AI Agent Analysis</h2>
+                <div class="lf-ws-ai-card">
+                    <h4 class="lf-ws-ai-card-title">추출된 핵심 문제점</h4>
+                    <p class="lf-ws-card-text" id="ext-problem">{{ consultation_state.ext_problem|default:"분석 대기 중..." }}</p>
+                </div>
+                <div class="lf-ws-ai-card">
+                    <h4 class="lf-ws-ai-card-title">추출된 해결 방법</h4>
+                    <p class="lf-ws-card-text" id="ext-solution">{{ consultation_state.ext_solution|default:"분석 대기 중..." }}</p>
+                </div>
+                <div class="lf-ws-ai-card">
+                    <h4 class="lf-ws-ai-card-title">추출된 차별성</h4>
+                    <p class="lf-ws-card-text" id="ext-differentiation">{{ consultation_state.ext_differentiation|default:"분석 대기 중..." }}</p>
+                </div>
+                <div class="lf-ws-ai-card">
+                    <h4 class="lf-ws-ai-card-title">추출된 기대 효과</h4>
+                    <p class="lf-ws-card-text" id="ext-effect">{{ consultation_state.ext_effect|default:"분석 대기 중..." }}</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="lf-ws-main">
+        <header class="lf-ws-main-hd">
+            <h2 class="lf-ws-main-title">{{ project.title }}</h2>
+            
+            <div class="lf-ws-actions">
+                <button id="view-process-btn" class="lf-btn-action lf-btn-action--secondary">
+                    파이프라인 상태
+                </button>
+                <button id="generate-claims-btn" class="lf-btn-action lf-btn-action--gold">
+                    청구항 작성
+                </button>
+                <button id="edit-claims-btn" class="lf-btn-action lf-btn-action--secondary">
+                    청구항 수정
+                </button>
+                <button id="generate-drawing-btn" class="lf-btn-action lf-btn-action--primary">
+                    도면 생성
+                </button>
+                <button id="generate-spec-btn" class="lf-btn-action lf-btn-action--primary">
+                    명세서 작성
+                </button>
+                <button id="main-pa-report-btn" class="lf-btn-action lf-btn-action--gold" style="display: none;">
+                    선행기술 리포트
+                </button>
+            </div>
+        </header>
+
+        <div id="chat-box" class="lf-chat-box">
+            {% for msg in chat_messages %}
+                {% if msg.role == 'assistant' %}
+                    <div class="lf-msg lf-msg-ai">{{ msg.content|linebreaksbr }}</div>
+                {% elif msg.role == 'user' %}
+                    <div class="lf-msg lf-msg-user">{{ msg.content|linebreaksbr }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <footer class="lf-chat-footer">
+            <input type="file" id="file-upload" style="display: none;" accept=".pdf,.docx,.hwp">
+            <form id="chat-form" class="lf-chat-form">
+                {% csrf_token %}
+                <button type="button" id="file-btn" class="lf-chat-attach" title="문서 업로드 (PDF, DOCX, HWP)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                </button>
+                <input type="text" id="chat-input" class="lf-chat-input" placeholder="발명에 대해 AI 변리사에게 자유롭게 설명해 주세요...">
+                <button type="submit" class="lf-btn-action lf-btn-action--gold" style="padding: 16px 32px; border-radius: 24px;">전송</button>
+            </form>
+        </footer>
+    </main>
+
+</div>
+
+{% include "workspace/components/_ws_modals.html" %}
+{% include "workspace/components/_ai_agent_modal.html" %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    window.WS_CONFIG = {
+        projectId: "{{ project.id }}",
+        csrfToken: "{{ csrf_token }}",
+        messageCount: parseInt("{{ chat_messages.count|default:0 }}"),
+        hasClaims: "{{ project.has_claims|yesno:'true,false' }}" === "true",
+        priorArtJson: "{{ prior_art_json|escapejs }}",
+        urls: {
+            chatApi: "{% url 'chat_api' project.id %}",
+            uploadApi: "{% url 'upload_file_api' project.id %}",
+            welcomeApi: "{% url 'welcome_api' project.id %}",
+            specApi: "{% url 'generate_specification_api' project.id %}",
+            claimsApi: "{% url 'manage_claims_api' project.id %}",
+            drawingsApi: "{% url 'generate_drawings_api' project.id %}",
+            generateClaimsApi: "{% url 'generate_claims_api' project.id %}",
+            saveClaimsApi: "{% url 'save_claims_api' project.id %}"
+        }
+    };
+</script>
+
+<script src="{% static 'js/workstation.js' %}"></script>
+<script src="{% static 'js/agent_modal.js' %}"></script>
+{% endblock %}

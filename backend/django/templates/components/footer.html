@@ -1,0 +1,36 @@
+{# templates/components/footer.html #}
+<footer class="lf-footer">
+  <div class="lf-container">
+    <div class="lf-footer-top">
+      <div>
+        <span class="lf-footer-logo">PYPI</span>
+        <p class="lf-footer-tagline">발명 아이디어를 입력하면 7개 전문 AI 에이전트가 특허청 제출 가능한 완성 명세서를 자동으로 완성하는 AI 특허 자동화 플랫폼입니다.</p>
+      </div>
+      <div class="lf-footer-cols">
+        <div class="lf-footer-col">
+          <span class="lf-footer-hd">PYPI</span>
+          <a href="{% url 'accounts:about' %}" class="lf-footer-link">서비스 소개</a>
+          <a href="{% url 'accounts:features' %}" class="lf-footer-link">특징 및 원칙</a>
+          <a href="{% url 'accounts:team' %}" class="lf-footer-link">팀 소개</a>
+        </div>
+        <div class="lf-footer-col">
+          <span class="lf-footer-hd">서비스</span>
+          <a href="{% url 'accounts:agents_overview' %}" class="lf-footer-link">에이전트 파이프라인</a>
+          {% if user.is_authenticated %}
+          <a href="{% url 'dashboard' %}" class="lf-footer-link">대시보드</a>
+          {% else %}
+          <a href="{% url 'login' %}" class="lf-footer-link">지금 시작하기</a>
+          {% endif %}
+        </div>
+        <div class="lf-footer-col">
+          <span class="lf-footer-hd">고객지원</span>
+          <a href="{% url 'accounts:qna' %}" class="lf-footer-link">특허법 Q&amp;A</a>
+        </div>
+      </div>
+    </div>
+    <div class="lf-footer-bottom">
+      <span class="lf-footer-copy">© 2025 꽃보다 특허 · PYPI. All rights reserved.</span>
+      <span class="lf-footer-disc">PYPI가 생성한 문서는 AI 자동 생성 결과이며, 실제 특허청 제출 전 변리사 검토를 권장합니다.</span>
+    </div>
+  </div>
+</footer>
