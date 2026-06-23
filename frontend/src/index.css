@@ -1,0 +1,240 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --lf-bg:       #fdfbf6;
+    --lf-bg2:      #fdfbf6;
+    --lf-bg3:      #fdfbf6;
+    --lf-navy:     #211b17;
+    --lf-dark:     #3d0e16;
+    --lf-dark-lt:  #5e1825;
+    --lf-body:     #4a4641;
+    --lf-mid:      #6e6864;
+    --lf-muted:    #aca59e;
+    --lf-gold:     #e8290d;
+    --lf-gold-lt:  #ff5840;
+    --lf-border:   rgba(232,41,13,.18);
+    --lf-serif:    'DM Serif Display', 'Noto Serif KR', Georgia, serif;
+    --lf-sans:     'Noto Sans KR', -apple-system, sans-serif;
+    --lf-ease:     cubic-bezier(.25,.46,.45,.94);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--lf-bg);
+    color: var(--lf-navy);
+    font-family: var(--lf-sans);
+    font-weight: 300;
+    line-height: 1.75;
+    overflow-x: hidden;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  h1, h2, h3, h4 { font-family: var(--lf-sans); font-weight: 800; letter-spacing: -.8px; word-break: keep-all; }
+}
+
+@layer components {
+  /* ── Gradient text (brand accent) ── */
+  .text-gradient {
+    background-image: linear-gradient(90deg, var(--lf-navy), var(--lf-gold) 55%, var(--lf-gold-lt));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* on dark backgrounds the navy-based gradient above is invisible */
+  .text-gradient-light {
+    background-image: linear-gradient(90deg, var(--lf-gold-lt), #fff8f2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* ── Buttons ── */
+  .btn-fill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 30px;
+    border-radius: 980px;
+    font-family: var(--lf-sans);
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--lf-dark);
+    border: 1px solid var(--lf-dark);
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+    text-decoration: none;
+    text-align: center;
+  }
+  .btn-fill:hover { background: var(--lf-dark-lt); border-color: var(--lf-dark-lt); transform: translateY(-1px); }
+
+  .btn-line {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 28px;
+    border-radius: 980px;
+    font-family: var(--lf-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--lf-navy);
+    background: var(--lf-bg);
+    border: 1px solid var(--lf-border);
+    cursor: pointer;
+    transition: color .2s, border-color .2s, background .2s;
+    text-decoration: none;
+    text-align: center;
+  }
+  .btn-line:hover { color: var(--lf-gold); border-color: rgba(232,41,13,.4); background: var(--lf-bg2); }
+
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 24px;
+    font-family: var(--lf-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--lf-dark);
+    border: 1px solid var(--lf-dark);
+    cursor: pointer;
+    transition: background .2s;
+    text-decoration: none;
+  }
+  .btn-gold:hover { background: var(--lf-dark-lt); border-color: var(--lf-dark-lt); }
+
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-family: var(--lf-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    background: #dc2626;
+    border: 1px solid #dc2626;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; }
+  .btn-danger:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ── Card ── */
+  .card {
+    background: var(--lf-bg);
+    border: 1px solid var(--lf-border);
+    padding: 40px;
+  }
+  .card-sm {
+    background: var(--lf-bg);
+    border: 1px solid var(--lf-border);
+    padding: 24px;
+  }
+
+  .feature-card {
+    background: var(--lf-bg2);
+    border-radius: 18px;
+    padding: 30px 28px;
+    transition: transform .2s var(--lf-ease), box-shadow .2s var(--lf-ease);
+  }
+  .feature-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -18px rgba(33,27,23,.18); }
+
+  .stat-card {
+    background: var(--lf-bg2);
+    border-radius: 20px;
+    padding: 36px;
+  }
+
+  /* ── Form elements ── */
+  .input-field {
+    width: 100%;
+    background: var(--lf-bg);
+    border: none;
+    border-bottom: 1px solid var(--lf-border);
+    padding: 12px 0;
+    font-family: var(--lf-sans);
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--lf-navy);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .input-field::placeholder { color: var(--lf-muted); }
+  .input-field:focus { border-color: var(--lf-gold); }
+
+  .input-area {
+    width: 100%;
+    background: var(--lf-bg2);
+    border: 1px solid var(--lf-border);
+    padding: 16px 20px;
+    font-family: var(--lf-sans);
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--lf-navy);
+    outline: none;
+    resize: vertical;
+    line-height: 2;
+    transition: border-color .2s;
+  }
+  .input-area:focus { border-color: rgba(232,41,13,.4); }
+
+  .label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--lf-gold);
+    opacity: .75;
+    margin-bottom: 12px;
+  }
+
+  /* ── Page container ── */
+  .page-wrap {
+    min-height: 100vh;
+    background: var(--lf-bg);
+    padding-top: 70px;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+}
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+@keyframes draw-line { to { stroke-dashoffset: 0; } }
+
+@keyframes redraw {
+  0%, 80% { stroke-dashoffset: 0; opacity: 1; }
+  90% { stroke-dashoffset: 240; opacity: .3; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@keyframes node-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .55; transform: scale(1.25); }
+}
+
+@keyframes flow { to { stroke-dashoffset: -76; } }
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
